@@ -27,6 +27,15 @@ const confirmLogout = () => {
 }
 
 const logout = () => {
+    // Muestra una notificación de éxito por el cierre de sesión
+    $q.notify({
+      color: 'warning', // Color verde (indicando éxito)
+    position: 'top',
+    message: 'Has cerrado sesión exitosamente',
+      icon: '!' // Icono de éxito
+    })
+
+
     router.push('/')
 }
 </script>
@@ -50,6 +59,6 @@ button {
     cursor: pointer;
 }
 button:hover {
-    background-color: #c82333;
+    background-color: #A92633FF;
 }
 </style>

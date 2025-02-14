@@ -27,13 +27,23 @@ let password = ''
 
 const handleLogin = () => {
     if (username === 'Daniel' && password === '12345') {
+      // Notificación de inicio de sesión exitoso
+    $q.notify({
+        color: 'positive',  // Color verde para éxito
+        position: 'top',
+        message: 'Inicio de sesión exitoso',
+        icon: 'check_circle'  // Icono de éxito
+    })
+    
+      // Redirige a la página de inicio (home)
     router.push('/home')
     } else {
+      // Notificación de error por credenciales incorrectas
     $q.notify({
-        color: 'negative',
+        color: 'negative',  // Color rojo para error
         position: 'top',
         message: 'Usuario o contraseña incorrectos',
-        icon: 'warning'
+        icon: 'warning'  // Icono de advertencia
     })
     }
 }
@@ -59,12 +69,12 @@ input {
 button {
     width: 100%;
     padding: 10px;
-    background-color: #007BFF;
+    background-color: #0E529BFF;
     color: white;
     border: none;
     cursor: pointer;
 }
 button:hover {
-    background-color: #0056b3;
+    background-color: #2F80D6FF;
 }
 </style>
