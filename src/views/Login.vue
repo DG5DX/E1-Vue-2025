@@ -1,6 +1,6 @@
 <template>
     <div class="login-container">
-      <h2>Login</h2>
+      <h2>Iniciar sesión</h2>
       <form @submit.prevent="handleLogin">
         <div class="input-group">
           <label for="username">Usuario</label>
@@ -10,7 +10,7 @@
           <label for="password">Contraseña</label>
           <input type="password" id="password" v-model="password" required />
         </div>
-        <button type="submit">Login</button>
+        <button type="submit">Iniciar sesión</button>
       </form>
     </div>
   </template>
@@ -25,12 +25,18 @@
     },
     methods: {
       handleLogin() {
-        // Lógica simple de autenticación
-        if (this.username === 'user' && this.password === 'password') {
-          // Si es correcto, redirige a la página de inicio
+        // Verificamos si las credenciales son correctas
+        if (this.username === 'Daniel' && this.password === '12345') {
+          // Si las credenciales son correctas, redirigimos a la página de inicio
           this.$router.push('/home');
         } else {
-          alert('Invalid username or password');
+          // Si las credenciales son incorrectas, mostramos una notificación de error
+          this.$q.notify({
+            color: 'negative',
+            position: 'top',
+            message: 'Usuario o contraseña incorrectos',
+            icon: 'warning'
+          });
         }
       }
     }

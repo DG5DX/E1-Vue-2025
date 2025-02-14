@@ -1,43 +1,37 @@
-// FILE: main.js
+import { createApp } from 'vue';
+import { router } from './routes/routes.js';
+import { Quasar, Notify, Dialog } from 'quasar';
+// Importar iconos y otras librerías de Quasar
+import '@quasar/extras/material-icons/material-icons.css';
+import '@quasar/extras/material-icons-outlined/material-icons-outlined.css';
+import '@quasar/extras/material-icons-round/material-icons-round.css';
+import '@quasar/extras/material-icons-sharp/material-icons-sharp.css';
+import '@quasar/extras/material-symbols-outlined/material-symbols-outlined.css';
+import '@quasar/extras/material-symbols-rounded/material-symbols-rounded.css';
+import '@quasar/extras/material-symbols-sharp/material-symbols-sharp.css';
+import '@quasar/extras/fontawesome-v6/fontawesome-v6.css';
+import '@quasar/extras/ionicons-v4/ionicons-v4.css';
+import '@quasar/extras/line-awesome/line-awesome.css';
 
-import { createApp } from 'vue'
-import {router} from "./routes/routes.js"
-import { Quasar } from 'quasar'
+import { createPinia } from 'pinia';
+import piniaPluginPersistedState from 'pinia-plugin-persistedstate';
 
-// Import icon libraries
-import '@quasar/extras/material-icons/material-icons.css'
-import '@quasar/extras/material-icons-outlined/material-icons-outlined.css'
-import '@quasar/extras/material-icons-round/material-icons-round.css'
-import '@quasar/extras/material-icons-sharp/material-icons-sharp.css'
-import '@quasar/extras/material-symbols-outlined/material-symbols-outlined.css'
-import '@quasar/extras/material-symbols-rounded/material-symbols-rounded.css'
-import '@quasar/extras/material-symbols-sharp/material-symbols-sharp.css'
-import '@quasar/extras/fontawesome-v6/fontawesome-v6.css'
-import '@quasar/extras/ionicons-v4/ionicons-v4.css'
-import '@quasar/extras/line-awesome/line-awesome.css'
+// Importar el CSS de Quasar
+import 'quasar/src/css/index.sass';
 
-import { createPinia } from 'pinia'
-import  piniaPluginPersistedState  from 'pinia-plugin-persistedstate'
+import App from './App.vue';
 
-// Import Quasar css
-import 'quasar/src/css/index.sass'
+const pinia = createPinia();
+pinia.use(piniaPluginPersistedState);
 
-// Assumes your root component is App.vue
-// and placed in same folder as main.js
-import App from './App.vue'
+const app = createApp(App);
 
-const pinia = createPinia()
-
-pinia.use(piniaPluginPersistedState)
-
-const app = createApp(App)  // Aquí usamos 'app' directamente
-
-// Usa pinia y quasar en la instancia de la app
-app.use(pinia)
+// Usar Pinia y Quasar con el plugin Notify
+app.use(pinia);
 app.use(Quasar, {
-  plugins: {}, // import Quasar plugins and add here
-})
+  plugins: { Notify, Dialog }
+});
 
-app.use(router)
+app.use(router);
 
-app.mount('#app') // Monta la app después de haber agregado todas las dependencias
+app.mount('#app');

@@ -1,18 +1,29 @@
 <template>
     <div class="home-container">
-      <h2>¡Bienvenidos!</h2>
-      <p>Te haz registrado con exito.</p>
-      <button @click="logout">Cerrar Sección</button>
+      <h2>¡Bienvenido!</h2>
+      <p>Te has registrado con éxito.</p>
+      <button @click="confirmLogout">Cerrar sesión</button>
     </div>
   </template>
   
   <script>
   export default {
     methods: {
+      confirmLogout() {
+        this.$q.dialog({
+          title: 'Cerrar sesión',
+          message: '¿Estás seguro de que deseas cerrar sesión?',
+          ok: 'Sí',
+          cancel: 'No',
+        }).onOk(() => {
+          this.logout();
+        }).onCancel(() => {
+          console.log('Cierre de sesión cancelado');
+        });
+      },
+  
       logout() {
-        // Lógica de logout
-        alert('You have logged out');
-        this.$router.push('/');
+        this.$router.push('/');  // Redirige a la página de login
       }
     }
   }
