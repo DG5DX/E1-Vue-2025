@@ -1,64 +1,102 @@
 <template>
-    <div class="home-container">
-    <h2>¡Bienvenido!</h2>
-    <p>Te has registrado con éxito.</p>
-    <button @click="confirmLogout">Cerrar sesión</button>
-    </div>
+  <q-layout view="hHh lpR fFf">
+    <q-header class="bg-primary text-white">
+      <q-toolbar>
+        <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
+
+        <q-toolbar-title>
+          API
+        </q-toolbar-title>
+
+        <div class="q-gutter-sm flex-grow-1"></div>
+
+        <q-btn 
+          dense 
+          flat 
+          label="Cerrar sesión" 
+          @click="confirmarCierreSesion" 
+          color="negative" 
+          class="session-btn" 
+          icon="exit_to_app" 
+          size="md" 
+        />
+      </q-toolbar>
+    </q-header>
+
+    <q-drawer v-model="leftDrawerOpen" side="left" overlay bordered>
+    </q-drawer>
+
+    <q-page-container>
+      <router-view />
+    </q-page-container>
+  </q-layout>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 
 const router = useRouter()
 const $q = useQuasar()
 
-const confirmLogout = () => {
-    $q.dialog({
-    title: 'Cerrar sesión',
-    message: '¿Estás seguro de que deseas cerrar sesión?',
-    ok: 'Sí',
-    cancel: 'No',
-    }).onOk(() => {
-    logout()
-    }).onCancel(() => {
-    console.log('Cierre de sesión cancelado')
-    })
+const leftDrawerOpen = ref(false)
+
+function toggleLeftDrawer() {
+  leftDrawerOpen.value = !leftDrawerOpen.value
 }
 
-const logout = () => {
-    // Muestra una notificación de éxito por el cierre de sesión
-    $q.notify({
-      color: 'warning', // Color verde (indicando éxito)
-    position: 'top',
-    message: 'Has cerrado sesión exitosamente',
-      icon: '!' // Icono de éxito
-    })
+function confirmarCierreSesion() {
+  $q.dialog({
+    title: 'Confirmación',
+    message: '¿Estás seguro de que deseas cerrar sesión?',
+    cancel: true,
+    persistent: true,
+    ok: {
+      label: 'Cerrar Sesión',
+      color: 'negative'
+    },
+    cancel: {
+      label: 'Cancelar',
+      color: 'primary'
+    }
+  }).onOk(() => {
+    cerrarSesion();
+  });
+}
 
-
-    router.push('/')
+function cerrarSesion() {
+  localStorage.removeItem('authToken');
+  
+  $q.notify({
+    type: 'warning',
+    message: '¡Cierre de sesión exitoso!',
+    position: 'top', 
+    timeout: 2000, 
+    icon: 'portrait', 
+  });
+  
+  router.push('/');
 }
 </script>
 
 <style scoped>
-.home-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    text-align: center;
+.session-btn {
+  font-weight: bold;
+  background-color: #E53935FF;
+  color: rgb(189, 78, 78);
+  border-radius: 8px;
+  padding: 10px 20px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
-button {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #DC3545;
-    color: white;
-    border: none;
-    cursor: pointer;
+
+.session-btn:hover {
+  background-color: #E79A9AFF;
+  transform: scale(1.05);
 }
-button:hover {
-    background-color: #A92633FF;
+
+.q-toolbar .q-gutter-sm {
+  margin-left: auto;
 }
 </style>

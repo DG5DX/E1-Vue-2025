@@ -1,27 +1,29 @@
 import {defineStore} from "pinia"
-import axios from "axios"
 import {ref} from "vue"
 
-export const useAdminStore = defineStore("admin",()=>{
-    let loading = ref(false)
-    const inicio = async (email,password) =>{
-        try {
-            loading.value=true
-            let datos = await axios.post(`http://localhost:4000/api/administrador/token`,{
-                email:email,password:password
-            });
+export const useStore = defineStore ("tienda",()=>{
 
-        return datos
-        }
-        catch (error){
-            loading.value=true
-            throw error;
-        }finally{            loading.value=false
-        }
-    }
+    const token = ref("");
+    const refreshToken = ref("")
     
-    return{
-        inicio, loading
-    }
-})
-
+        function set_Token_RefreshToken (Token,RefreshToken){
+            if(token){
+                token.value= Token
+                refreshToken.value= RefreshToken
+            }
+            else{
+                console.log("no-token no-refreshToken");
+            }
+        }
+    
+    
+    
+        return{
+            token,
+            refreshToken,
+            set_Token_RefreshToken
+        }
+    
+    },{
+        persist:true
+    })

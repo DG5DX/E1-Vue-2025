@@ -1,80 +1,107 @@
 <template>
-    <div class="login-container">
-    <h2>Iniciar sesión</h2>
-    <form @submit.prevent="handleLogin">
-        <div class="input-group">
-        <label for="username">Usuario</label>
-        <input type="text" id="username" v-model="username" required />
-        </div>
-        <div class="input-group">
-        <label for="password">Contraseña</label>
-        <input type="password" id="password" v-model="password" required />
-        </div>
-        <button type="submit">Iniciar sesión</button>
-    </form>
+    <div class="login">
+        <h2>Iniciar sesión</h2>
+        <form @submit.prevent="handleLogin">
+            <div class="input-group">
+                <label for="username">Usuario</label>
+                <input type="text" id="username" v-model="username" required />
+            </div>
+            <div class="input-group">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" v-model="password" required />
+            </div>
+            <q-btn type="submit" label="Iniciar sesión" color="primary" @click="login()" icon="login" class="full-width" />
+        </form>
     </div>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useQuasar } from 'quasar'
+import { postData } from '../services/apiclient'
+import { useStore } from '../stores/General'
+
+
+const username = ref('')
+const password = ref('')
+const store = useStore()
 
 const router = useRouter()
-const $q = useQuasar()
 
-let username = ''
-let password = ''
-
-const handleLogin = () => {
-    if (username === 'Daniel' && password === '12345') {
-      // Notificación de inicio de sesión exitoso
-    $q.notify({
-        color: 'positive',  // Color verde para éxito
-        position: 'top',
-        message: 'Inicio de sesión exitoso',
-        icon: 'check_circle'  // Icono de éxito
-    })
-    
-      // Redirige a la página de inicio (home)
-    router.push('/home')
-    } else {
-      // Notificación de error por credenciales incorrectas
-    $q.notify({
-        color: 'negative',  // Color rojo para error
-        position: 'top',
-        message: 'Usuario o contraseña incorrectos',
-        icon: 'warning'  // Icono de advertencia
-    })
+async function login() {
+    try {
+        const response =await postData("/oauth/token", {
+            grant_type: "password",
+            client_id: import.meta.env.VITE_CLIENT_ID,
+            client_secret: import.meta.env.VITE_CLIENT_SECRET,
+            username: username.value,
+            password: password.value
+        })
+        const token = response.access_token
+        if (token) {
+            store.set_Token_RefreshToken(response.access_token, response.refresh_token)
+            router.replace("/home")
+        }
+        else {
+            console.log("Error", response)
+        }
+    } catch (error) {
+        console.log(error);
     }
+
 }
 </script>
 
 <style scoped>
-.login-container {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    background-color: #fff;
+.login {
+    min-width: 350px;
+    max-width: 500px;
+    min-height: 400px;
+    margin: 100px auto;
+    padding: 40px;
+    border: 1px solid #ffffff;
+    border-radius: 15px;
+    background-color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
+
+h2 {
+    font-family: 'Trebuchet MS', sans-serif;
+    color: #234161FF;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
 .input-group {
-    margin-bottom: 10px;
+    width: 100%;
+    margin-bottom: 20px;
 }
+
+label {
+    font-family: 'Arial', sans-serif;
+    color: #234161FF;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    font-size: medium;
+}
+
 input {
     width: 100%;
-    padding: 8px;
+    padding: 12px;
     margin-top: 5px;
+    border: 2px solid #dddddd;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: transform 0.3s ease-in-out, border-color 0.3s ease;
 }
-button {
-    width: 100%;
-    padding: 10px;
-    background-color: #0E529BFF;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-button:hover {
-    background-color: #2F80D6FF;
+
+input:focus {
+    border-color: #FFEB3B;
+    transform: scale(1.05);
 }
 </style>

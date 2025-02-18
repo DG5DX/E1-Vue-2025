@@ -10,7 +10,7 @@
 <style scoped>
 #app {
   font-family: 'Arial', sans-serif;
-  background-color: #f4f4f9;
+  background-color: #064968C4;
   min-height: 100vh;
   display: flex;
   justify-content: center;
