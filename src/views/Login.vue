@@ -10,27 +10,46 @@
                 <label for="password">Contraseña</label>
                 <input type="password" id="password" v-model="password" required />
             </div>
-            <q-btn type="submit" label="Iniciar sesión" color="primary" @click="login()" icon="login" class="full-width" />
+            <q-btn type="submit" label="Iniciar sesión" color="blue" :loading="loading" :disable="isDisabled"
+                icon="login" class="full-width" @click="validateAndLogin()" />
         </form>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { postData } from '../services/apiclient'
 import { useStore } from '../stores/General'
-
+import { useQuasar } from 'quasar'
 
 const username = ref('')
 const password = ref('')
 const store = useStore()
-
 const router = useRouter()
+const $q = useQuasar()
+const loading = ref(false)
+
+const isDisabled = computed(() => !username.value || !password.value)
+
+function validateAndLogin() {
+    if (!username.value || !password.value) {
+        $q.notify({
+            type: 'warning',
+            message: 'Todos los campos son obligatorios',
+            position: 'top-right',
+            timeout: 3000
+        })
+        return
+    }
+    login()
+}
 
 async function login() {
+    loading.value = true
+
     try {
-        const response =await postData("/oauth/token", {
+        const response = await postData("/oauth/token", {
             grant_type: "password",
             client_id: import.meta.env.VITE_CLIENT_ID,
             client_secret: import.meta.env.VITE_CLIENT_SECRET,
@@ -38,17 +57,36 @@ async function login() {
             password: password.value
         })
         const token = response.access_token
+
         if (token) {
             store.set_Token_RefreshToken(response.access_token, response.refresh_token)
+
+            $q.notify({
+                type: 'positive',
+                message: 'Inicio de sesión exitoso',
+                position: 'top-right',
+                timeout: 3000
+            })
+
             router.replace("/home")
-        }
-        else {
-            console.log("Error", response)
+        } else {
+            $q.notify({
+                type: 'negative',
+                message: 'Usuario o contraseña incorrectos',
+                position: 'top-right',
+                timeout: 3000
+            })
         }
     } catch (error) {
-        console.log(error);
+        $q.notify({
+            type: 'negative',
+            message: 'Usuario o contraseña incorrectos',
+            position: 'top-right',
+            timeout: 3000
+        })
+    } finally {
+        loading.value = false
     }
-
 }
 </script>
 
