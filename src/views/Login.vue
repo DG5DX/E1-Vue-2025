@@ -64,7 +64,7 @@ async function login() {
             $q.notify({
                 type: 'positive',
                 message: 'Inicio de sesión exitoso',
-                position: 'top-right',
+                position: 'top',
                 timeout: 3000
             })
 
@@ -73,7 +73,7 @@ async function login() {
             $q.notify({
                 type: 'negative',
                 message: 'Usuario o contraseña incorrectos',
-                position: 'top-right',
+                position: 'top',
                 timeout: 3000
             })
         }
@@ -81,7 +81,7 @@ async function login() {
         $q.notify({
             type: 'negative',
             message: 'Usuario o contraseña incorrectos',
-            position: 'top-right',
+            position: 'top',
             timeout: 3000
         })
     } finally {
