@@ -17,7 +17,7 @@
             </q-avatar>
           </q-item-section>
           <q-item-section>
-            <q-item-label>{{ userEmail || 'Usuario' }}</q-item-label>
+            <q-item-label>{{ userEmail || "Usuario" }}</q-item-label>
             <q-item-label caption>Sesión activa</q-item-label>
           </q-item-section>
         </q-item>
@@ -53,8 +53,9 @@
       <q-page class="q-pa-md">
         <h4>Facturas</h4>
 
-        <q-table 
-          flat bordered
+        <q-table
+          flat
+          bordered
           :rows="facturas"
           :columns="columns"
           row-key="id"
@@ -66,99 +67,114 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { useQuasar } from 'quasar'
-import axios from 'axios'
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useQuasar } from "quasar";
+import axios from "axios";
 
-const router = useRouter()
-const $q = useQuasar()
+const router = useRouter();
+const $q = useQuasar();
 
-const leftDrawerOpen = ref(false)
-const facturas = ref([])
-const cargando = ref(false)
-const userEmail = ref('')  // Almacena el correo o nombre del usuario
+const leftDrawerOpen = ref(false);
+const facturas = ref([]);
+const cargando = ref(false);
+const userEmail = ref(""); // Almacena el correo o nombre del usuario
 
 const columns = [
-  { name: 'id', label: 'ID', align: 'left', field: row => row.id },
-  { name: 'cliente', label: 'Cliente', align: 'left', field: row => row.cliente },
-  { name: 'fecha', label: 'Fecha', align: 'left', field: row => row.fecha },
-  { name: 'opciones', label: 'Total', align: 'right', field: row => formatCurrency(row.total) }
-]
+  { name: "id", label: "ID", align: "left", field: (row) => row.id },
+  {
+    name: "cliente",
+    label: "Cliente",
+    align: "left",
+    field: (row) => row.cliente,
+  },
+  { name: "fecha", label: "Fecha", align: "left", field: (row) => row.fecha },
+  {
+    name: "opciones",
+    label: "Opciones",
+    align: "right",
+    field: (row) => formatCurrency(row.total),
+  },
+];
 
 function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value
+  leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 
 function goTo(route) {
-  router.push(`/${route}`)
+  router.push(`/${route}`);
 }
 
 function confirmarCierreSesion() {
   $q.dialog({
-    title: 'Confirmación',
-    message: '¿Estás seguro de que deseas cerrar sesión?',
+    title: "Confirmación",
+    message: "¿Estás seguro de que deseas cerrar sesión?",
     cancel: true,
     persistent: true,
-    ok: { label: 'Cerrar Sesión', color: 'negative' },
-    cancel: { label: 'Cancelar', color: 'primary' }
+    ok: { label: "Cerrar Sesión", color: "negative" },
+    cancel: { label: "Cancelar", color: "primary" },
   }).onOk(() => {
-    cerrarSesion()
-  })
+    cerrarSesion();
+  });
 }
 
 function cerrarSesion() {
-  localStorage.removeItem('authToken')
-  localStorage.removeItem('userEmail')
+  localStorage.removeItem("authToken");
+  localStorage.removeItem("userEmail");
 
   $q.notify({
-    type: 'warning',
-    message: '¡Cierre de sesión exitoso!',
-    position: 'top',
+    type: "warning",
+    message: "¡Cierre de sesión exitoso!",
+    position: "top",
     timeout: 2000,
-    icon: 'portrait'
-  })
+    icon: "portrait",
+  });
 
-  router.push('/')
+  router.push("/");
 }
 
 async function obtenerFacturas() {
-  cargando.value = true
+  cargando.value = true;
   try {
-    const token = localStorage.getItem('authToken')
-    const response = await axios.get('/api/facturas', {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-    facturas.value = response.data
+    const token = localStorage.getItem("authToken");
+    const response = await axios.get("/api/facturas", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    facturas.value = response.data;
   } catch (error) {
     $q.notify({
-      type: 'negative',
-      message: error.response?.data.message || 'Error al obtener facturas',
-      position: 'top',
-      timeout: 3000
-    })
-    console.error(error)
+      type: "negative",
+      message: error.response?.data.message || "Error al obtener facturas",
+      position: "top",
+      timeout: 3000,
+    });
+    console.error(error);
   } finally {
-    cargando.value = false
+    cargando.value = false;
   }
 }
 
 function obtenerUsuario() {
-  userEmail.value = localStorage.getItem('userEmail') || ''
+  userEmail.value = localStorage.getItem("userEmail") || "";
 }
 
 function formatCurrency(value) {
-  return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(value)
+  return new Intl.NumberFormat("es-CO", {
+    style: "currency",
+    currency: "COP",
+  }).format(value);
 }
 
 onMounted(() => {
-  obtenerFacturas()
-  obtenerUsuario()
-})
+  obtenerFacturas();
+  obtenerUsuario();
+});
 </script>
 
 <style scoped>
 h4 {
   color: aliceblue;
+  display: flex;
+  justify-content: center;
 }
 </style>
