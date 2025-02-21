@@ -9,6 +9,21 @@
 
     <q-drawer v-model="leftDrawerOpen" side="left" overlay bordered>
       <q-list>
+        <!-- Usuario -->
+        <q-item>
+          <q-item-section avatar>
+            <q-avatar color="primary" text-color="white">
+              <q-icon name="person" />
+            </q-avatar>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>{{ userEmail || 'Usuario' }}</q-item-label>
+            <q-item-label caption>Sesión activa</q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-separator />
+
         <q-item clickable v-ripple @click="goTo('home')" disable>
           <q-item-section avatar>
             <q-icon name="receipt" />
@@ -62,6 +77,7 @@ const $q = useQuasar()
 const leftDrawerOpen = ref(false)
 const facturas = ref([])
 const cargando = ref(false)
+const userEmail = ref('')  // Almacena el correo o nombre del usuario
 
 const columns = [
   { name: 'id', label: 'ID', align: 'left', field: row => row.id },
@@ -93,6 +109,7 @@ function confirmarCierreSesion() {
 
 function cerrarSesion() {
   localStorage.removeItem('authToken')
+  localStorage.removeItem('userEmail')
 
   $q.notify({
     type: 'warning',
@@ -126,12 +143,17 @@ async function obtenerFacturas() {
   }
 }
 
+function obtenerUsuario() {
+  userEmail.value = localStorage.getItem('userEmail') || ''
+}
+
 function formatCurrency(value) {
   return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(value)
 }
 
 onMounted(() => {
   obtenerFacturas()
+  obtenerUsuario()
 })
 </script>
 
