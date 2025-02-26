@@ -9,11 +9,9 @@ apiClient.interceptors.request.use(
         const dataStore = JSON.parse(localStorage.getItem("tienda"));
         const token = dataStore?.token || "";
 
-        // 🚨 No agregar "token" en la autenticación
         if (!config.url.includes("/oauth/token")) {
             config.headers["Authorization"] = `Bearer ${token}`;
         }
-
         return config;
     },
     (error) => {

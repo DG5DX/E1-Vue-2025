@@ -7,7 +7,13 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" side="left" overlay bordered>
+    <q-drawer 
+      v-model="leftDrawerOpen" 
+      side="left" 
+      overlay 
+      bordered 
+      :breakpoint="500"
+    >
       <q-list>
         <!-- Usuario -->
         <q-item>
@@ -17,7 +23,7 @@
             </q-avatar>
           </q-item-section>
           <q-item-section>
-            <q-item-label>{{ userEmail || "Usuario" }}</q-item-label>
+            <q-item-label>{{ username || "Usuario" }}</q-item-label>
             <q-item-label caption>Sesión activa</q-item-label>
           </q-item-section>
         </q-item>
@@ -78,24 +84,11 @@ const $q = useQuasar();
 const leftDrawerOpen = ref(false);
 const facturas = ref([]);
 const cargando = ref(false);
-const userEmail = ref(""); // Almacena el correo o nombre del usuario
+const username = ref("");
 
-const columns = [
-  { name: "id", label: "ID", align: "left", field: (row) => row.id },
-  {
-    name: "cliente",
-    label: "Cliente",
-    align: "left",
-    field: (row) => row.cliente,
-  },
-  { name: "fecha", label: "Fecha", align: "left", field: (row) => row.fecha },
-  {
-    name: "opciones",
-    label: "Opciones",
-    align: "right",
-    field: (row) => formatCurrency(row.total),
-  },
-];
+const columns = ref([
+  // Agregar las columnas de la tabla si es necesario
+]);
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
@@ -120,7 +113,7 @@ function confirmarCierreSesion() {
 
 function cerrarSesion() {
   localStorage.removeItem("authToken");
-  localStorage.removeItem("userEmail");
+  localStorage.removeItem("username");
 
   $q.notify({
     type: "warning",
@@ -133,41 +126,9 @@ function cerrarSesion() {
   router.push("/");
 }
 
-async function obtenerFacturas() {
-  cargando.value = true;
-  try {
-    const token = localStorage.getItem("authToken");
-    const response = await axios.get("/api/facturas", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    facturas.value = response.data;
-  } catch (error) {
-    $q.notify({
-      type: "negative",
-      message: error.response?.data.message || "Error al obtener facturas",
-      position: "top",
-      timeout: 3000,
-    });
-    console.error(error);
-  } finally {
-    cargando.value = false;
-  }
-}
-
-function obtenerUsuario() {
-  userEmail.value = localStorage.getItem("userEmail") || "";
-}
-
-function formatCurrency(value) {
-  return new Intl.NumberFormat("es-CO", {
-    style: "currency",
-    currency: "COP",
-  }).format(value);
-}
 
 onMounted(() => {
-  obtenerFacturas();
-  obtenerUsuario();
+  
 });
 </script>
 

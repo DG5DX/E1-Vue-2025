@@ -19,7 +19,7 @@
             </q-avatar>
           </q-item-section>
           <q-item-section>
-            <q-item-label>{{ userEmail || "Usuario" }}</q-item-label>
+            <q-item-label>{{"Usuario" }}</q-item-label>
             <q-item-label caption>Sesión activa</q-item-label>
           </q-item-section>
         </q-item>
