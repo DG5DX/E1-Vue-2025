@@ -63,42 +63,43 @@
       </q-page>
     </q-page-container>
 
-    <q-dialog v-model="facturaDialog" full-width full-height>
-      <q-card class="detalle-factura">
-        <q-bar class="bg-primary text-white">
-          <q-space />
-          <q-btn dense flat icon="close" v-close-popup>
-            <q-tooltip class="bg-red">Cerrar</q-tooltip>
-          </q-btn>
-        </q-bar>
+    <q-dialog v-model="facturaDialog" persistent full-width full-height>
+  <q-card class="detalle-factura">
+    <q-bar class="bg-primary text-white">
+      <q-space />
+      <q-btn dense flat icon="close" @click="facturaDialog = false">
+        <q-tooltip class="bg-red">Cerrar</q-tooltip>
+      </q-btn>
+    </q-bar>
 
-        <q-card-section class="q-pa-md">
-          <div class="titulo-detalle">Detalles de la Factura</div>
-          <q-form class="detalle-form">
-            <q-input outlined v-model="facturaSeleccionada.number" label="Número de Factura" readonly />
-            <q-input outlined v-model="facturaSeleccionada.api_client_name" label="Cliente" readonly />
-            <q-input outlined v-model="facturaSeleccionada.reference_code" label="Código de Referencia" readonly />
-            <q-input outlined v-model="facturaSeleccionada.identification" label="Identificación" readonly />
-            <q-input outlined v-model="facturaSeleccionada.names" label="Nombre" readonly />
-            <q-input outlined v-model="facturaSeleccionada.email" label="Correo Electrónico" readonly />
-            <q-input outlined v-model="facturaSeleccionada.total" label="Total" readonly />
-          </q-form>
-        </q-card-section>
+    <q-card-section class="q-pa-md">
+      <div class="titulo-detalle">Detalles de la Factura</div>
+      <q-form class="detalle-form">
+        <q-input outlined v-model="facturaSeleccionada.number" label="Número de Factura" readonly style="flex: 1 1 48%;" />
+        <q-input outlined v-model="facturaSeleccionada.api_client_name" label="Cliente" readonly style="flex: 1 1 48%;" />
+        <q-input outlined v-model="facturaSeleccionada.reference_code" label="Código de Referencia" readonly style="flex: 1 1 48%;" />
+        <q-input outlined v-model="facturaSeleccionada.identification" label="Identificación" readonly style="flex: 1 1 48%;" />
+        <q-input outlined v-model="facturaSeleccionada.names" label="Nombre" readonly style="flex: 1 1 48%;" />
+        <q-input outlined v-model="facturaSeleccionada.email" label="Correo Electrónico" readonly style="flex: 1 1 48%;" />
+        <q-input outlined v-model="facturaSeleccionada.total" label="Total" readonly style="flex: 1 1 48%;" />
+      </q-form>
+    </q-card-section>
 
-        <q-separator />
+    <q-separator />
 
-        <q-card-section class="q-pa-md">
-          <q-table
-            title="Productos"
-            :rows="facturaSeleccionada.productos || []"
-            :columns="columnsProductos"
-            row-key="id"
-            bordered
-            class="tabla-detalle"
-          />
-        </q-card-section>
-      </q-card>
-    </q-dialog>
+    <q-card-section class="q-pa-md">
+      <q-table
+        title="Productos"
+        :rows="facturaSeleccionada.productos || []"
+        :columns="columnsProductos"
+        row-key="id"
+        bordered
+        class="tabla-detalle"
+      />
+    </q-card-section>
+  </q-card>
+</q-dialog>
+
   </q-layout>
 </template>
 
@@ -223,4 +224,11 @@ h4 {
   text-align: center;
   margin-bottom: 10px;
 }
+
+.detalle-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 </style>
