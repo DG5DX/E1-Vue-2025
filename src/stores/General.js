@@ -1,29 +1,28 @@
-import {defineStore} from "pinia"
-import {ref} from "vue"
+import { defineStore } from "pinia";
+import { ref } from "vue";
 
-export const useStore = defineStore ("tienda",()=>{
-
+export const useStore = defineStore(
+  "tienda",
+  () => {
     const token = ref("");
-    const refreshToken = ref("")
-    
-        function set_Token_RefreshToken (Token,RefreshToken){
-            if(token){
-                token.value= Token
-                refreshToken.value= RefreshToken
-            }
-            else{
-                console.log("no-token no-refreshToken");
-            }
-        }
-    
-    
-    
-        return{
-            token,
-            refreshToken,
-            set_Token_RefreshToken
-        }
-    
-    },{
-        persist:true
-    })
+    const refreshToken = ref("");
+
+    function set_Token_RefreshToken(Token, RefreshToken) {
+      if (token) {
+        token.value = Token;
+        refreshToken.value = RefreshToken;
+      } else {
+        console.log("no-token no-refreshToken");
+      }
+    }
+
+    return {
+      token,
+      refreshToken,
+      set_Token_RefreshToken,
+    };
+  },
+  {
+    persist: true,
+  }
+);

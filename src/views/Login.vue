@@ -8,7 +8,22 @@
       </div>
       <div class="input-group">
         <label for="password">Contraseña</label>
-        <input type="password" id="password" v-model="password" required />
+        <div class="password-wrapper">
+          <input
+            :type="showPassword ? 'text' : 'password'"
+            id="password"
+            v-model="password"
+            required
+          />
+          <q-btn
+            flat
+            dense
+            round
+            :icon="showPassword ? 'visibility_off' : 'visibility'"
+            class="toggle-password"
+            @click="togglePassword"
+          />
+        </div>
       </div>
       <q-btn
         type="submit"
@@ -18,7 +33,7 @@
         :disable="isDisabled"
         icon="login"
         class="full-width"
-        @click="validateAndLogin()"
+        @click="validateAndLogin"
       />
     </form>
   </div>
@@ -33,12 +48,17 @@ import { useQuasar } from "quasar";
 
 const username = ref("");
 const password = ref("");
+const showPassword = ref(false);
 const store = useStore();
 const router = useRouter();
 const $q = useQuasar();
 const loading = ref(false);
 
 const isDisabled = computed(() => !username.value || !password.value);
+
+function togglePassword() {
+  showPassword.value = !showPassword.value;
+}
 
 function validateAndLogin() {
   if (!username.value || !password.value) {
@@ -139,10 +159,15 @@ label {
   font-size: medium;
 }
 
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
 input {
   width: 100%;
   padding: 12px;
-  margin-top: 5px;
+  padding-right: 40px; /* Deja espacio para el icono */
   border: 2px solid #dddddd;
   border-radius: 8px;
   font-size: 16px;
@@ -152,5 +177,17 @@ input {
 input:focus {
   border-color: #ffeb3b;
   transform: scale(1.05);
+}
+
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  color: #777;
+}
+
+.toggle-password:hover {
+  color: #234161ff;
 }
 </style>
