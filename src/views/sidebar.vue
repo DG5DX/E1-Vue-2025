@@ -65,45 +65,48 @@
 <script setup>
 import { useRouter, useRoute } from "vue-router";
 import { ref, computed } from "vue";
+import { useQuasar } from 'quasar';  // Importa el hook useQuasar
+
+const $q = useQuasar();  // Obtén la instancia de $q
 
 const router = useRouter();
 const route = useRoute();
 const leftDrawerOpen = ref(false);
 
 const toggleLeftDrawer = () => {
-	leftDrawerOpen.value = !leftDrawerOpen.value;
+leftDrawerOpen.value = !leftDrawerOpen.value;
 };
 
 const goTo = (ruta) => {
-	router.push(`/${ruta}`);
+router.push(`/${ruta}`);
 };
 
 // Función para verificar si la ruta actual coincide
 const esRutaActual = (ruta) => computed(() => route.path === ruta).value;
 
 function confirmarCierreSesion() {
-	$q.dialog({
-		title: "Confirmación",
-		message: "¿Estás seguro de que deseas cerrar sesión?",
-		cancel: true,
-		persistent: true,
-		ok: { label: "Cerrar Sesión", color: "negative" },
-		cancel: { label: "Cancelar", color: "primary" },
-	}).onOk(() => {
-		cerrarSesion();
-	});
+$q.dialog({
+    title: "Confirmación",
+    message: "¿Estás seguro de que deseas cerrar sesión?",
+    cancel: true,
+    persistent: true,
+    ok: { label: "Cerrar Sesión", color: "negative" },
+    cancel: { label: "Cancelar", color: "primary" },
+}).onOk(() => {
+    cerrarSesion();
+});
 }
 
 function cerrarSesion() {
-	localStorage.removeItem("authToken");
-	localStorage.removeItem("username");
-	$q.notify({
-		type: "warning",
-		message: "¡Cierre de sesión exitoso!",
-		position: "top",
-		timeout: 2000,
-		icon: "portrait",
-	});
-	router.push("/");
+localStorage.removeItem("authToken");
+localStorage.removeItem("username");
+$q.notify({
+    type: "warning",
+    message: "¡Cierre de sesión exitoso!",
+    position: "top",
+    timeout: 2000,
+    icon: "portrait",
+});
+  router.push("/");  // Redirigir a la página de login
 }
 </script>

@@ -1,45 +1,70 @@
 <template>
-	<div>
-		<h1>Crear Cliente</h1>
-		<section>
+	<div class="container">
+		<h2>Crear Cliente</h2>
+		<section class="formulario">
 			<q-select
+			class="input"
 				v-model="cliente.identification_document_id"
 				:options="typeDocuments"
 				option-value="id"
 				option-label="nombre"
-				label="Tipo de Identificación" />
+				label="Tipo de Identificación" 
+				rules="required"/>
 			<q-input
+			class="input"
 				v-model="cliente.identification"
-				label="Num. de Identificación" />
+				label="Num. de Identificación" 
+				:rules="[val => (val && val.length <= 10) || 'La identificacion no puede pasar los 10 digitos']"/>
 			<q-input
+			class="input"
 				v-model="cliente.dv"
 				v-if="mostrarDV"
 				type="Number"
-				label="Digíto de verificación" /><!-- Si el clinete se identifica con NIT -->
+				label="Digíto de verificación" 
+				/><!-- Si el clinete se identifica con NIT -->
 			<q-select
+			class="input"
 				v-model="cliente.legal_organization_id"
 				:options="typeOrganizations"
 				option-value="id"
 				option-label="nombre"
 				label="Tipo de Organizacion" />
 			<q-input
+			class="input"
 				v-model="cliente.company"
 				label="Razon Social" /><!-- Si el clinete es persona juridica -->
-			<q-input v-model="cliente.trade_name" label="Nombre Comerial" />
+			<q-input 
+			class="input"
+				v-model="cliente.trade_name" 
+				label="Nombre Comerial" />
 			<q-input
+			class="input"
 				v-model="cliente.names"
 				label="Nombre"
 				v-if="esPersonaNatural" /><!-- Si el clinete es persona natural -->
-			<q-input v-model="cliente.address" label="Dirección" />
-			<q-input v-model="cliente.email" label="Correo Electrónico" />
-			<q-input v-model="cliente.phone" label="Número de Teléfono" />
+			<q-input 
+			class="input"
+				v-model="cliente.address" 
+				label="Dirección" />
+			<q-input
+			class="input"
+				v-model="cliente.email" 
+				label="Correo Electrónico"
+				:rules="[val => /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}/.test(val) || 'Correo electrónico no válido']"/>
+			<q-input 
+			class="input"
+				v-model="cliente.phone" 
+				label="Número de Teléfono"
+				:rules="[val => (val && val.length <= 10) || 'El telefono no puede pasar los 10 digitos']"/>
 			<q-select
+			class="input"
 				v-model="cliente.tribute_id"
 				:options="typeTributes"
 				option-value="id"
 				option-label="nombre"
 				label="Tributo" />
 			<q-select
+			class="input"
 				v-model="cliente.municipality_id"
 				:options="municipios"
 				option-value="id"
@@ -50,7 +75,8 @@
 				@filter="onFilter"
 				:loading="loading"
 				clearable />
-			<q-btn label="Crear Cliente" @click="crearCliente" />
+
+			<q-btn class="post-btn" label="Crear Cliente" @click="crearCliente" />
 		</section>
 	</div>
 </template>
@@ -98,6 +124,7 @@ const mostrarDV = computed(
 const esPersonaNatural = computed(
 	() => cliente.value.legal_organization_id?.id === 2
 );
+
 
 const onFilter = async (val, update) => {
 	if (val === "") {
@@ -168,8 +195,32 @@ async function crearCliente() {
 </script>
 
 <style scoped>
-h6 {
-	font-size: 1.5rem;
+.container {
+	margin: 1px;
+	padding: 25px;
+	background-color: #f5f5f5;
+	border-radius: 8px;
+}
+.formulario {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+.input{
+	font-size: 15px;
+	margin-bottom: 5px;
+	padding: 10px;
+	border-radius: 5px;
+}
+.post-btn {
+	margin-top: 20px;
+	padding: 10px 20px;
+	background-color: #1976d2;
+	color: white;
+	font-weight: bold;
+	border-radius: 5px;
+}
+h2 {
 	font-weight: bold;
 	color: #1976d2;
 	text-align: center;

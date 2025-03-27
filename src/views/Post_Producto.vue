@@ -1,32 +1,23 @@
 <template>
-	<div>
-		<h1>Crear Producto</h1>
-		<section>
-			<q-input v-model="producto.code_reference" label="Código de Referencia" />
-			<q-input v-model="producto.name" label="Nombre" />
-			<!-- <q-input
-					v-model.number="producto.quantity"
-					type="number"
-					label="Cantidad" />
-				<q-input
-					v-model.number="producto.discount_rate"
-					type="number"
-					step="0.01"
-					label="Porcentaje de Descuento" /> -->
+	<div class="container">
+		<h2>Crear Producto</h2>
+		<section class="formulario">
 			<q-input
+			class="input"
+				v-model="producto.code_reference" 
+				label="Código de Referencia" />
+			<q-input 
+			class="input"
+				v-model="producto.name" 
+				label="Nombre" />
+			<q-input
+			class="input"
 				v-model.number="producto.price"
 				type="number"
 				step="0.01"
 				label="Precio" />
-			<!-- <q-input
-					v-model.number="producto.price"
-					type="number"
-					step="0.01"
-					label="Precio" />
-				<q-input
-					v-model.number="producto.tax_rate"
-					label="Porcentaje del Impuesto" /> -->
 			<q-select
+			class="input"
 				v-model="producto.unit_measure_id"
 				:options="medidas"
 				option-value="id"
@@ -38,19 +29,14 @@
 				:loading="loading"
 				clearable />
 			<q-select
+			class="input"
 				v-model="producto.standard_code_id"
 				:options="typeStandard"
 				option-value="id"
 				option-label="nombre"
 				label="Código de Estándar" />
-			<!-- <q-select
-					v-model="cliente.is_excluded"
-					:options="[{ id: 0, nombre: 'no'}, { id: 1, nombre: 'si'}]"
-					option-value="id"
-					option-label="nombre"
-					label="Excluido de IVA" />
-				 -->
-			<q-btn label="Crear Producto" @click="crearProducto" />
+
+			<q-btn class="post-btn" label="Crear Producto" @click="crearProducto" />
 		</section>
 	</div>
 
@@ -63,7 +49,7 @@
 		class="q-mt-md">
 		<template v-slot:body-cell-actions="props">
 			<q-td :props="props">
-				<q-btn color="red" icon="delete" flat dense />
+				<q-btn color="red" icon="delete" flat dense @click="eliminarProducto(props.row._id)" />
 			</q-td>
 		</template>
 	</q-table>
@@ -222,6 +208,16 @@ const onFilterU = async (val, update) => {
 // 	return [];
 // }
 
+async function eliminarProducto(id) {
+	try {
+		await axios.delete(`http://localhost:5000/factus/producto/${id}`);
+		$q.notify({ type: "positive", message: "Producto eliminado con éxito" });
+		traerProductos(); 
+	} catch (error) {
+		$q.notify({ type: "negative", message: "Error al eliminar el producto" });
+	}
+}
+
 async function crearProducto() {
 	try {
 		const productoEnviado = {
@@ -235,7 +231,7 @@ async function crearProducto() {
 			productoEnviado
 		);
 		$q.notify({ type: "positive", message: "Producto creado con éxito" });
-		cliente.value = {};
+		producto.value = {};
 		traerProductos();
 		console.log(response);
 	} catch (error) {
@@ -334,7 +330,32 @@ onMounted(() => {
 </script>
 
 <style scoped>
-h6 {
+.container {
+	margin: 1px;
+	padding: 25px;
+	background-color: #f5f5f5;
+	border-radius: 8px;
+}
+.formulario {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+.input{
+	font-size: 15px;
+	margin-bottom: 5px;
+	padding: 10px;
+	border-radius: 5px;
+}
+.post-btn {
+	margin-top: 20px;
+	padding: 10px 20px;
+	background-color: #1976d2;
+	color: white;
+	font-weight: bold;
+	border-radius: 5px;
+}
+h2 {
 	font-size: 1.5rem;
 	font-weight: bold;
 	color: #1976d2;

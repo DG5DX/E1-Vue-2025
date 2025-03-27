@@ -130,43 +130,6 @@
 									style="min-width: 150px" />
 							</q-td>
 						</template>
-
-						<!-- <template v-slot:body-cell-withholding_taxes="props">
-								<q-td :props="props">
-									<q-btn icon="add" color="primary" flat dense @click.stop>
-										<q-popup-proxy
-											transition-show="scale"
-											transition-hide="scale">
-											<q-card class="q-pa-sm">
-												<q-card-section>
-													<q-select
-														v-model="props.row.withholding_taxes.code"
-														:options="tributos"
-														option-value="id"
-														option-label="name"
-														label="Retencion Aplicada"
-														use-input
-														input-debounce="300"
-														@filter="onFilterT"
-														:loading="loading"
-														emit-value
-														map-options
-														clearable
-														style="min-width: 150px" />
-													<q-input
-														v-model="
-															props.row.withholding_taxes.withholding_tax_rate
-														"
-														label="Porcentaje de la Retencion (%)"
-														type="number"
-														dense />
-												</q-card-section>
-											</q-card>
-										</q-popup-proxy>
-									</q-btn>
-								</q-td>
-							</template> -->
-
 						<template v-slot:body-cell-actions="props">
 							<q-td :props="props">
 								<q-btn
@@ -249,12 +212,7 @@ const columnsItems = [
 
 	// 🔽 Campos editables
 	{ name: "quantity", label: "Cantidad", field: "quantity", align: "center" },
-	/* {
-		name: "discount_rate",
-		label: "Descuento (%)",
-		field: "discount_rate",
-		align: "center",
-	}, */
+
 	{
 		name: "tax_rate",
 		label: "Tasa de Impuesto",
@@ -273,14 +231,7 @@ const columnsItems = [
 		field: "tribute_id",
 		align: "center",
 	},
-	/* {
-		name: "withholding_taxes",
-		label: "Retenciones",
-		field: "withholding_taxes",
-		align: "center",
-	}, */
 
-	// Acciones (Eliminar)
 	{ name: "actions", label: "Acciones", align: "center" },
 ];
 
@@ -407,19 +358,7 @@ async function crearFactura() {
 		facturaEnviado
 	);
 	$q.notify({ type: "positive", message: "Producto creado con éxito" });
-	factura.value = {
-		reference_code: "",
-		observation: "",
-		payment_form: null,
-		payment_due_date: "",
-		payment_method_code: null,
-		billing_period: {
-			start_date: "",
-			end_date: "",
-		},
-		customer: null,
-		items: [],
-	};
+
 	console.log(responseF, responseB, facturaEnviado);
 	/* 	} catch (error) {
 		$q.notify({
