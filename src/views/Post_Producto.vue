@@ -2,22 +2,11 @@
 	<div class="container">
 		<h2>Crear Producto</h2>
 		<section class="formulario">
-			<q-input
-			class="input"
-				v-model="producto.code_reference" 
-				label="Código de Referencia" />
-			<q-input 
-			class="input"
-				v-model="producto.name" 
-				label="Nombre" />
-			<q-input
-			class="input"
-				v-model.number="producto.price"
-				type="number"
-				step="0.01"
-				label="Precio" />
+			<q-input class="input" v-model="producto.code_reference" label="Código de Referencia" />
+			<q-input class="input" v-model="producto.name" label="Nombre" />
+			<q-input class="input" v-model.number="producto.price" type="number" step="0.01" label="Precio" />
 			<q-select
-			class="input"
+				class="input"
 				v-model="producto.unit_measure_id"
 				:options="medidas"
 				option-value="id"
@@ -27,29 +16,25 @@
 				input-debounce="300"
 				@filter="onFilterU"
 				:loading="loading"
-				clearable />
+				clearable
+			/>
 			<q-select
-			class="input"
+				class="input"
 				v-model="producto.standard_code_id"
 				:options="typeStandard"
 				option-value="id"
 				option-label="nombre"
-				label="Código de Estándar" />
+				label="Código de Estándar"
+			/>
 
 			<q-btn class="post-btn" label="Crear Producto" @click="crearProducto" />
 		</section>
 	</div>
 
-	<q-table
-		flat
-		bordered
-		:rows="rowsItems"
-		:columns="columnsItems"
-		row-key="id"
-		class="q-mt-md">
+	<q-table flat bordered :rows="rowsItems" :columns="columnsItems" row-key="id" class="q-mt-md">
 		<template v-slot:body-cell-actions="props">
 			<q-td :props="props">
-				<q-btn color="red" icon="delete" flat dense @click="eliminarProducto(props.row._id)" />
+				<q-btn color="red" icon="delete" flat dense />
 			</q-td>
 		</template>
 	</q-table>
@@ -57,21 +42,18 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 import axios from "axios";
 import { useStore } from "../stores/General";
 
 const store = useStore();
-
 const $q = useQuasar();
-
 const medidas = ref([]);
 const loading = ref(false);
 const m = ref([]);
-
 const producto = ref({});
 const rowsItems = ref([]);
+
 const columnsItems = [
 	{ name: "reference", label: "Codigo de Referencia", field: "code_reference" },
 	{ name: "name", label: "Producto", field: "name" },
@@ -94,71 +76,22 @@ const columnsItems = [
 	},
 	{ name: "actions", label: "Acciones", align: "center" },
 ];
+
 const typeStandard = [
 	{ id: 1, nombre: "Estándar de adopción del contribuyente" },
 	{ id: 2, nombre: "UNSPSC" },
 	{ id: 3, nombre: "Partida Arancelaria" },
 	{ id: 4, nombre: "GTIN" },
 ];
-/* const numberingRanges = [
-	"Registro civil",
-	"Tarjeta de identidad",
-	"Cédula de ciudadanía",
-	"Tarjeta de extranjería",
-	"Cédula de extranjería",
-	"NIT",
-	"Pasaporte",
-	"Documento de identificación extranjero",
-	"PEP",
-	"NIT otro país",
-	"NUIP",
-];
-const paymentMethods = [
-	"Efectivo",
-	"Consignación",
-	"Cheque",
-	"Transferencia",
-	"Bonos",
-	"Vales",
-	"Medio de pago no definido",
-	"Tarjeta Débito",
-	"Tarjeta Crédito",
-];
-const paymentForm = ["Pago de contado", "Pago a crédito"]; */
-/* const itemSelected = ref(null);
-const selectItems = ref([]);
-const factura = ref({
-	numbering_rage_id: "",
-	reference_code: "",
-	observation: "",
-	payment_form: "",
-	payment_due_date: "",
-	payment_method_code: "",
-	billing_period: {
-		start_date: "",
-		start_time: "",
-		end_date: "",
-		end_time: "",
-	},
-	customer: {
-		name: "",
-		document: "",
-		email: "",
-	},
-	items: [],
-}); */
 
 const traerMedidas = async () => {
 	try {
-		const response = await axios.get(
-			"https://api-sandbox.factus.com.co/v1/measurement-units",
-			{
-				headers: {
-					Authorization: `Bearer ${store.token}`,
-					Accept: "application/json",
-				},
-			}
-		);
+		const response = await axios.get("https://api-sandbox.factus.com.co/v1/measurement-units", {
+			headers: {
+				Authorization: `Bearer ${store.token}`,
+				Accept: "application/json",
+			},
+		});
 
 		m.value = response.data.data;
 	} catch (error) {
@@ -176,19 +109,15 @@ const onFilterU = async (val, update) => {
 	loading.value = true;
 
 	try {
-		const response = await axios.get(
-			"https://api-sandbox.factus.com.co/v1/measurement-units",
-			{
-				headers: {
-					Authorization: `Bearer ${store.token}`,
-					Accept: "application/json",
-				},
-
-				params: {
-					name: val,
-				},
-			}
-		);
+		const response = await axios.get("https://api-sandbox.factus.com.co/v1/measurement-units", {
+			headers: {
+				Authorization: `Bearer ${store.token}`,
+				Accept: "application/json",
+			},
+			params: {
+				name: val,
+			},
+		});
 
 		medidas.value = response.data.data.map((medidas) => ({
 			id: medidas.id,
@@ -203,22 +132,21 @@ const onFilterU = async (val, update) => {
 	}
 };
 
-// async function getData(endpoint) {
-// 	// Simulación de API
-// 	return [];
-// }
-
-async function eliminarProducto(id) {
-	try {
-		await axios.delete(`http://localhost:5000/factus/producto/${id}`);
-		$q.notify({ type: "positive", message: "Producto eliminado con éxito" });
-		traerProductos(); 
-	} catch (error) {
-		$q.notify({ type: "negative", message: "Error al eliminar el producto" });
-	}
-}
-
 async function crearProducto() {
+	if (
+		!producto.value.code_reference ||
+		!producto.value.name ||
+		!producto.value.price ||
+		!producto.value.unit_measure_id ||
+		!producto.value.standard_code_id
+	) {
+		$q.notify({
+			type: "negative",
+			message: "Por favor, completa todos los campos antes de crear el producto.",
+		});
+		return;
+	}
+
 	try {
 		const productoEnviado = {
 			...producto.value,
@@ -226,12 +154,9 @@ async function crearProducto() {
 			standard_code_id: producto.value.standard_code_id?.id || null,
 		};
 
-		const response = await axios.post(
-			"http://localhost:5000/factus/producto",
-			productoEnviado
-		);
+		const response = await axios.post("http://localhost:5000/factus/producto", productoEnviado);
 		$q.notify({ type: "positive", message: "Producto creado con éxito" });
-		producto.value = {};
+		producto.value = {}; // Limpiar el formulario después de la creación
 		traerProductos();
 		console.log(response);
 	} catch (error) {
@@ -252,77 +177,6 @@ async function traerProductos() {
 	}
 }
 
-/* async function crearFactura() {
-	try {
-		const store = JSON.parse(localStorage.getItem("tienda"));
-		const token = store?.token || "";
-		if (!token) {
-			$q.notify({ type: "negative", message: "No estás autenticado." });
-			return;
-		}
-
-		const facturaData = {
-			...factura.value,
-			payment_due_date: new Date(factura.value.payment_due_date),
-		};
-
-		const response = await axios.post(
-			"http://localhost:5000/factus/producto",
-			facturaData,
-			{
-				headers: {
-					Authorization: `Bearer ${token}`,
-					"Content-Type": "application/json",
-				},
-			}
-		);
-
-		console.log(response);
-
-		$q.notify({ type: "positive", message: "Factura creada con éxito" });
-		factura.value = { billing_period: {}, items: [] }; // Limpiar formulario después de enviar
-	} catch (error) {
-		console.error("Error al crear la factura:", error);
-		$q.notify({ type: "negative", message: "Error al crear la factura" });
-	}
-}
-
-const lastSelectedItem = ref("");
-
-function agregarItem() {
-	if (itemSelected.value) {
-		if (
-			!factura.value.items.find((item) => item.id === itemSelected.value.id)
-		) {
-			factura.value.items.push({ ...itemSelected.value });
-			lastSelectedItem.value = itemSelected.value.nombre;
-		} else {
-			$q.notify({ type: "warning", message: "El producto ya está agregado." });
-		}
-		itemSelected.value = null;
-	}
-}
-
-function eliminarItem(id) {
-	factura.value.items = factura.value.items.filter((item) => item.id !== id);
-}
-
-async function getProductos() {
-	try {
-		const r = await axios.get("https://dummyjson.com/products");
-		if (r.data && r.data.products) {
-			selectItems.value = r.data.products.map((product) => ({
-				id: product.id,
-				nombre: product.title,
-				precio: product.price,
-			}));
-		}
-	} catch (error) {
-		console.error("Error cargando los productos:", error);
-		$q.notify({ type: "negative", message: "Error cargando productos" });
-	}
-}	*/
-
 onMounted(() => {
 	traerMedidas();
 	traerProductos();
@@ -341,7 +195,7 @@ onMounted(() => {
 	flex-direction: column;
 	gap: 10px;
 }
-.input{
+.input {
 	font-size: 15px;
 	margin-bottom: 5px;
 	padding: 10px;
