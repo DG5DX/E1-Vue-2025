@@ -157,6 +157,8 @@ const visualizarFactura = async (facturaId) => {
   }
 };
 
+const post = () => router.push("/path/post");
+
 const cerrarSesion = () => {
   store.token = null;
   router.push("/");
@@ -167,10 +169,18 @@ onMounted(cargarFacturas);
 
 <template>
   <div class="p-4 bg-gray-100 min-h-screen">
+    <div class="info">
     <h1 class="text-2xl font-bold mb-6 text-center text-gray-800">
       Lista de Facturas
     </h1>
-
+    <q-btn
+      class="btn"
+      color="primary"
+      label="Crear Factura"
+      @click="post"
+      unelevated>
+    </q-btn>
+    </div>
     <q-table
       :rows="rows"
       :columns="columns"
@@ -193,15 +203,16 @@ onMounted(cargarFacturas);
       <template v-slot:body-cell-accion="props">
         <q-td :props="props">
           <q-btn
-            label="visualizar"
+            class="act-btn"
             color="secondary"
             icon="visibility"
             @click="visualizarFactura(props.row.number)"
             dense
             unelevated
+            
           />
           <q-btn
-            label="descargar"
+            class="act-btn"
             color="primary"
             icon="download"
             @click="descargarFactura(props.row.number)"
@@ -258,6 +269,22 @@ h1 {
   color: whitesmoke;
   text-align: center;
   margin-bottom: 20px;
+}
+
+.info{
+  display: grid;
+  justify-content: center;
+}
+
+.btn{
+  margin-top: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}
+
+.act-btn{
+margin-left: 5px;
+margin-right: 5px;
 }
 
 .detalle-factura {
